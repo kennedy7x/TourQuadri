@@ -1,0 +1,75 @@
+<div class="form-group">
+    <label for="data"><i class="fas fa-calendar"></i> Data</label>
+    <input type="date" name="data" id="data" required min="{{ data_minima }}" max="{{ data_limite }}" value="{{ agendamento.data if agendamento else '' }}">
+    <div id="data-invalida-msg" class="info-box error" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i> Selecione uma data válida
+    </div>
+    <div id="data-bloqueada-msg" class="info-box error" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i> Esta data não está disponível para agendamentos
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="horario"><i class="fas fa-clock"></i> Horário</label>
+    <select name="horario" id="horario" required>
+        <option value="">Selecione um horário</option>
+        {% for hora in range(9,18) %}
+        {% for minuto in range(0,60,10) %}
+        {% if not (hora == 17 and minuto > 0) %}
+        <option value="{{'%02d' % hora}}:{{'%02d' % minuto}}" 
+                id="horario-{{ '%02d' % hora }}{{ '%02d' % minuto }}"
+                {% if agendamento and '%02d' % hora ~ ':' ~ '%02d' % minuto == agendamento.horario %}selected{% endif %}>
+            {{'%02d' % hora}}:{{'%02d' % minuto}}
+        </option>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </select>
+    <div id="horario-indisponivel-msg" class="info-box warning" style="display: none;">
+        <i class="fas fa-info-circle"></i> Alguns horários estão indisponíveis nesta data
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="roteiro"><i class="fas fa-route"></i> Roteiro</label>
+    <select name="roteiro" id="roteiro" required>
+        <option value="">Selecione um roteiro</option>
+        {% for id, roteiro in ROTEIROS.items() %}
+        <option value="{{ id }}" 
+                {% if agendamento and id == agendamento.roteiro %}selected{% endif %}
+                {% if roteiro_selecionado == id and not agendamento %}selected{% endif %}>
+            {{ roteiro.nome }} - {{ roteiro.duracao }} minutos - {{ roteiro.preco }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="form-group">
+    <label><i class="fas fa-tractor"></i> Selecione as Máquinas</label>
+    <div id="maquinas-aviso" class="maquinas-aviso" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i> Algumas máquinas já estão agendadas nesse horário
+    </div>
+    <div class="maquinas-grid" id="maquinas-grid">
+        {% for id, maquina in maquinas_especificacoes.items() %}
+        {% set i = id|int %}
+        <div class="maquina-item" id="maquina-{{ i }}" onclick="toggleMaquina({{ i }})" style="cursor: pointer;">
+            <div class="maquina-item-imagem">
+                <img src="{{ url_for('static', filename='images/maquinas/' ~ maquina.modelo ~ '.jpg') }}" 
+                     alt="{{ maquina.modelo }} - Máquina {{ i }}"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22150%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22200%22 height=%22150%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2216%22 font-family=%22Arial%22%3E{{ maquina.modelo }}%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="maquina-item-info">
+                <input type="checkbox" name="maquinas" value="{{ i }}" id="maquina-check-{{ i }}"
+                       {% if agendamento and agendamento.maquinas is iterable and agendamento.maquinas is not string %}
+                           {% if i in agendamento.maquinas %}checked{% endif %}
+                       {% elif agendamento and i == agendamento.maquinas %}checked{% endif %}>
+                <label for="maquina-check-{{ i }}">Máquina {{ i }}</label>
+                <span class="maquina-item-cc">{{ maquina.cc }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="nenhuma-selecionada" class="info-box error" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i> Selecione pelo menos uma máquina
+    </div>
+</div>

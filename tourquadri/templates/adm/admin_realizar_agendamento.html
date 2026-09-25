@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Realizar Agendamento{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- HEADER -->
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Realizar Agendamento</h1>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/admin">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="section">
+        <form action="/agendar_passeio" method="POST" id="form-agendamento">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% include 'forms/agendamento_admin.html' %}
+            <button class="btn btn-padrao" type="submit" id="btn-agendar">
+                <i class="fas fa-check"></i> Agendar Passeio
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof inicializarAgendamento === 'function') {
+            inicializarAgendamento();
+        }
+    });
+</script>
+{% endblock %}

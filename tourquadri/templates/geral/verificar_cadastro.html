@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Confirmar Cadastro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="logo-form">
+        <span class="tour">Tour</span><span class="quadri">Quadri</span>
+    </h2>
+    <h3 class="subtitle">
+        <i class="fas fa-envelope-open-text"></i> Confirme seu Email
+    </h3>
+
+    <p class="text-center text-muted">
+        Enviamos um código de 6 dígitos para<br>
+        <strong>{{ email }}</strong>
+    </p>
+
+    <form action="/confirmar_cadastro" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="email" value="{{ email }}">
+        <div class="form-group-campo">
+            <input type="text" name="codigo" placeholder="000000"
+                   maxlength="6" required pattern="[0-9]{6}"
+                   style="text-align: center; font-size: 22px; letter-spacing: 8px; font-weight: 600;">
+        </div>
+        <button class="btn" type="submit">
+            <i class="fas fa-check"></i> Confirmar Cadastro
+        </button>
+    </form>
+
+    <br>
+
+    <form action="/reenviar_codigo_cadastro" method="POST" style="text-align: center;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="email" value="{{ email }}">
+        <button type="submit" class="link-button">
+            <i class="fas fa-redo"></i> Reenviar código
+        </button>
+    </form>
+
+    <br>
+
+    <a href="/register" style="text-align: center; display: block;">
+        <i class="fas fa-arrow-left"></i> Voltar para o cadastro
+    </a>
+</div>
+
+<style>
+    .link-button {
+        background: none;
+        border: none;
+        color: #2563eb;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 5px 10px;
+        font-family: inherit;
+    }
+    .link-button:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Gerenciar Roteiros{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- HEADER -->
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Gerenciar Roteiros</h1>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/admin">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    {% if request.args.get('mensagem') %}
+    <div class="mensagem {{ request.args.get('tipo', 'success') }}">
+        <i class="fas fa-{% if request.args.get('tipo') == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+        {{ request.args.get('mensagem') }}
+    </div>
+    {% endif %}
+
+    <!-- Botão Adicionar Roteiro -->
+    <div class="section" style="padding: 10px 20px;">
+        <a class="btn btn-padrao" href="/admin/roteiro/adicionar">
+            <i class="fas fa-plus"></i> Adicionar Roteiro
+        </a>
+    </div>
+
+    <!-- Lista de Roteiros -->
+    <div class="section">
+        <h2><i class="fas fa-list"></i> Roteiros Existentes</h2>
+        <div class="roteiros-admin-grid">
+            {% for id, roteiro in ROTEIROS.items() %}
+            <div class="roteiro-admin-card" onclick="window.location.href='/roteiro/{{ id }}'">
+                <div class="roteiro-admin-imagem">
+                    <img src="{{ url_for('static', filename='images/roteiros/' ~ roteiro.foto_principal) }}" 
+                         alt="{{ roteiro.nome }}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2220%22 font-family=%22Arial%22%3E{{ roteiro.nome }}%3C/text%3E%3C/svg%3E'">
+                </div>
+                <div class="roteiro-admin-info">
+                    <h3>{{ roteiro.nome }}</h3>
+                    <div class="roteiro-admin-detalhes">
+                        <span><i class="fas fa-clock"></i> {{ roteiro.duracao }} min</span>
+                        <span><i class="fas fa-dollar-sign"></i> {{ roteiro.preco }}</span>
+                        <span><i class="fas fa-signal"></i> {{ roteiro.tipo }}</span>
+                    </div>
+                    <p class="roteiro-admin-desc">{{ roteiro.descricao_curta }}</p>
+                </div>
+                <div class="roteiro-admin-actions" onclick="event.stopPropagation();">
+                    <a class="btn btn-pequeno" href="/admin/roteiro/editar/{{ id }}">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <button class="btn btn-pequeno btn-danger" onclick="confirmarExclusao('/admin/roteiros/excluir/{{ id }}', 'Tem certeza que deseja excluir este roteiro?', 'Excluir Roteiro')">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmarExclusao(url, mensagem, titulo) {
+    if (typeof confirmarAcao === 'function') {
+        confirmarAcao(mensagem, titulo).then(function(resultado) {
+            if (resultado) {
+                window.location.href = url;
+            }
+        });
+    } else {
+        if (confirm(mensagem)) {
+            window.location.href = url;
+        }
+    }
+}
+</script>
+{% endblock %}

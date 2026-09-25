@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Meu Programa de Fidelidade{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header-flex">
+        <h1><i class="fas fa-gift"></i> Meu Programa de Fidelidade</h1>
+        <a class="btn btn-padrao btn-voltar" href="/dashboard">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    {% if progresso %}
+    <!-- CARD PRINCIPAL -->
+    <div class="section">
+        <div class="fidelidade-hero {% if progresso.desconto_disponivel %}fidelidade-hero-ativa{% endif %}">
+            {% if progresso.desconto_disponivel %}
+                <div class="fidelidade-hero-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h2>🎉 Parabéns! Você tem {{ progresso.percentual_desconto }}% de desconto!</h2>
+                <p>Aplique no seu próximo agendamento. Ao finalizar o passeio, o contador zera e você começa a acumular de novo.</p>
+                <a href="/dashboard?aplicar_desconto=1" class="btn btn-padrao">
+                    <i class="fas fa-calendar-plus"></i> Agendar com Desconto
+                </a>
+            {% else %}
+                <div class="fidelidade-hero-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h2>Faltam {{ progresso.faltam }} passeio{{ 's' if progresso.faltam != 1 else '' }}</h2>
+                <p>Complete {{ progresso.passeios_necessarios }} passeios e ganhe <strong>{{ progresso.percentual_desconto }}% de desconto</strong> no próximo!</p>
+                <div class="fidelidade-progresso-grande">
+                    <div class="fidelidade-barra-grande">
+                        <div class="fidelidade-barra-preenchimento-grande" style="width: {{ progresso.percentual }}%;"></div>
+                    </div>
+                    <span class="fidelidade-contador-grande">{{ progresso.passeios_realizados }}/{{ progresso.passeios_necessarios }}</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- COMO FUNCIONA -->
+    <div class="section">
+        <h2><i class="fas fa-question-circle"></i> Como Funciona</h2>
+        <div class="fidelidade-passos">
+            <div class="fidelidade-passo">
+                <div class="fidelidade-passo-numero">1</div>
+                <h4>Faça Passeios</h4>
+                <p>Complete {{ progresso.passeios_necessarios }} passeios com a TourQuadri</p>
+            </div>
+            <div class="fidelidade-passo">
+                <div class="fidelidade-passo-numero">2</div>
+                <h4>Ganhe Desconto</h4>
+                <p>Você ganha {{ progresso.percentual_desconto }}% de desconto automático</p>
+            </div>
+            <div class="fidelidade-passo">
+                <div class="fidelidade-passo-numero">3</div>
+                <h4>Aplique no Próximo</h4>
+                <p>Use no seu 6º passeio em qualquer roteiro</p>
+            </div>
+            <div class="fidelidade-passo">
+                <div class="fidelidade-passo-numero">4</div>
+                <h4>Acumule de Novo</h4>
+                <p>Após usar, o contador zera e você começa a acumular de novo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESTATÍSTICAS -->
+    <div class="section">
+        <h2><i class="fas fa-chart-line"></i> Suas Estatísticas</h2>
+        <div class="estatisticas">
+            <div class="stat-item">
+                <span class="stat-numero">{{ progresso.passeios_realizados }}</span>
+                <span class="stat-label">Passeios Acumulados</span>
+            </div>
+            <div class="stat-item">
+                {% if progresso.desconto_disponivel %}
+                <span class="stat-numero"><i class="fas fa-check-circle" style="color:#16a34a;"></i></span>
+                {% else %}
+                <span class="stat-numero">{{ progresso.passeios_necessarios }}</span>
+                {% endif %}
+                <span class="stat-label">Meta para Desconto</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-numero">{{ progresso.percentual_desconto }}%</span>
+                <span class="stat-label">Desconto Oferecido</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-numero">
+                    {% if progresso.desconto_disponivel %}<i class="fas fa-check-circle" style="color:#16a34a;"></i>{% else %}{{ progresso.faltam }}{% endif %}
+                </span>
+                <span class="stat-label">{% if progresso.desconto_disponivel %}Disponível{% else %}Faltam{% endif %}</span>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-info-circle"></i>
+        <p>Programa de fidelidade não disponível para administradores.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

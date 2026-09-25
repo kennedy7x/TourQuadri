@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if roteiro %}Editar Roteiro - {{ roteiro.nome }}{% else %}Adicionar Novo Roteiro{% endif %}{% endblock %}
+
+{% block content %}
+<div class="dashboard roteiro-detalhe-container">
+    <div class="dashboard-header-flex">
+        <h1>
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </h1>
+        <a class="btn btn-padrao btn-voltar" href="/admin/roteiros">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    <div class="roteiro-detalhe">
+        <!-- Imagem principal -->
+        <div class="roteiro-detalhe-imagem-principal">
+            {% if roteiro and roteiro.foto_principal %}
+                <img src="{{ url_for('static', filename='images/roteiros/' ~ roteiro.foto_principal) }}" 
+                     alt="{{ roteiro.nome }}"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22400%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22800%22 height=%22400%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2230%22 font-family=%22Arial%22%3E{{ roteiro.nome }}%3C/text%3E%3C/svg%3E'">
+            {% else %}
+                <div style="width: 100%; height: 300px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 20px; border-radius: 12px;">
+                    <i class="fas fa-image" style="font-size: 48px; margin-right: 10px;"></i> Sem imagem
+                </div>
+            {% endif %}
+        </div>
+
+        <form method="POST" action="{% if roteiro %}/admin/roteiros/editar/{{ id }}{% else %}/admin/roteiros/adicionar{% endif %}" id="form-editar-roteiro">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="roteiro-detalhe-info">
+                <!-- FOTO PRINCIPAL -->
+                <div class="form-group">
+                    <label>Foto Principal</label>
+                    <input type="text" name="foto_principal" value="{{ roteiro.foto_principal if roteiro else '' }}" placeholder="nome_da_foto.jpg" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 15px;">
+                </div>
+
+                <!-- NOME DO ROTEIRO -->
+                <div class="form-group">
+                    <label>Nome do Roteiro</label>
+                    <input type="text" name="nome" value="{{ roteiro.nome if roteiro else '' }}" required>
+                </div>
+
+                <!-- METAS -->
+                <div class="roteiro-detalhe-metas">
+                    <span>
+                        <i class="fas fa-clock"></i> 
+                        <input type="number" name="duracao" value="{{ roteiro.duracao if roteiro else '' }}" required min="10" style="width: 60px; display: inline-block;"> minutos
+                    </span>
+                    <span>
+                        <i class="fas fa-dollar-sign"></i> 
+                        <input type="text" name="preco" value="{{ roteiro.preco if roteiro else '' }}" required style="width: 80px; display: inline-block;">
+                    </span>
+                    <span>
+                        <i class="fas fa-signal"></i> Nível: 
+                        <select name="tipo" required>
+                            <option value="Fácil" {% if roteiro and roteiro.tipo == 'Fácil' %}selected{% endif %}>Fácil</option>
+                            <option value="Moderado" {% if roteiro and roteiro.tipo == 'Moderado' %}selected{% endif %}>Moderado</option>
+                            <option value="Difícil" {% if roteiro and roteiro.tipo == 'Difícil' %}selected{% endif %}>Difícil</option>
+                        </select>
+                    </span>
+                    <span>
+                        <i class="fas fa-camera"></i> 
+                        <input type="text" name="paradas" value="{{ roteiro.paradas if roteiro else '1 parada para fotos' }}" style="width: 120px; display: inline-block;">
+                    </span>
+                </div>
+
+                <!-- DESCRIÇÃO -->
+                <div class="roteiro-detalhe-descricao">
+                    <h3><i class="fas fa-info-circle"></i> Sobre o passeio</h3>
+                    <textarea name="descricao" rows="6" required style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 15px;">{{ roteiro.descricao_completa if roteiro else '' }}</textarea>
+                </div>
+                
+                <!-- O QUE ESTÁ INCLUSO -->
+                <div class="roteiro-detalhe-inclui">
+                    <h3><i class="fas fa-check-circle"></i> O que está incluso</h3>
+                    <input type="text" name="inclui" 
+                           value="{{ roteiro.inclui|join(', ') if roteiro else '' }}" 
+                           style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 15px;" 
+                           placeholder="Passeio de quadriciclo, Equipamento de segurança, Guia especializado...">
+                </div>
+
+                <!-- GALERIA -->
+                <div class="roteiro-detalhe-galeria">
+                    <h3><i class="fas fa-images"></i> Galeria</h3>
+                    <input type="text" name="galeria" 
+                           value="{{ roteiro.galeria|join(', ') if roteiro else '' }}" 
+                           style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 15px;" 
+                           placeholder="nome_da_foto.jpg, nome_da_foto.jpg, nome_da_foto.jpg...">
+                    
+                    <!-- GALERIA DE IMAGENS -->
+                    <div class="galeria-grid" style="margin-top: 10px;">
+                        {% if roteiro and roteiro.galeria %}
+                            {% for foto in roteiro.galeria %}
+                            <img src="{{ url_for('static', filename='images/roteiros/' ~ foto) }}" 
+                                 alt="Foto do {{ roteiro.nome }}"
+                                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2218%22 font-family=%22Arial%22%3EFoto%3C/text%3E%3C/svg%3E'">
+                            {% endfor %}
+                        {% else %}
+                            <div style="background: #f3f4f6; border-radius: 8px; height: 200px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px;">
+                                <i class="fas fa-image" style="font-size: 24px; margin-right: 8px;"></i> Sem imagem
+                            </div>
+                            <div style="background: #f3f4f6; border-radius: 8px; height: 200px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px;">
+                                <i class="fas fa-image" style="font-size: 24px; margin-right: 8px;"></i> Sem imagem
+                            </div>
+                            <div style="background: #f3f4f6; border-radius: 8px; height: 200px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 14px;">
+                                <i class="fas fa-image" style="font-size: 24px; margin-right: 8px;"></i> Sem imagem
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- BOTÕES -->
+                <div class="roteiro-detalhe-actions">
+                    <button class="btn btn-padrao" type="submit">
+                        <i class="fas fa-save"></i> {% if roteiro %}Salvar Alterações{% else %}Criar Roteiro{% endif %}
+                    </button>
+                    <a class="btn btn-padrao" href="/admin/roteiros">
+                        Cancelar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

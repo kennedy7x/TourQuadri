@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Recuperar Senha{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="logo-form">
+        <span class="tour">Tour</span><span class="quadri">Quadri</span>
+    </h2>
+    <h3 class="subtitle">
+        <i class="fas fa-key"></i> Recuperar Senha
+    </h3>
+
+    <p class="text-center text-muted">
+        Digite seu email para receber um código de verificação
+    </p>
+
+    <form action="/solicitar_codigo" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group-campo">
+            <input type="email" name="email" placeholder="Seu e-mail" value="{{ email or '' }}"
+                   class="{% if erros and erros.email %}campo-erro{% endif %}" required>
+            {% if erros and erros.email %}
+            <span class="mensagem-erro"><i class="fas fa-exclamation-circle"></i> {{ erros.email }}</span>
+            {% endif %}
+        </div>
+        <button class="btn" type="submit">
+            <i class="fas fa-envelope"></i> Enviar Código
+        </button>
+    </form>
+
+    <br>
+
+    <a href="/login">
+        <i class="fas fa-arrow-left"></i> Voltar para o Login
+    </a>
+</div>
+{% endblock %}

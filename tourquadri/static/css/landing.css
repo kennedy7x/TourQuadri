@@ -1,0 +1,749 @@
+/* ==========================
+   LANDING PAGE - TourQuadri
+   Design exclusivo da página inicial
+========================== */
+
+.landing-wrapper { 
+    min-height: 100vh; 
+    background: #0a0f1a; 
+}
+
+/* ==================================================
+   FORÇA A LANDING A APARECER (GARANTIA)
+   ================================================== */
+.landing-wrapper .hero-section,
+.landing-wrapper .section-landing,
+.landing-wrapper .cta-section {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* ESCONDE AS MENSAGENS DO BASE.HTML NA LANDING */
+.landing-wrapper .mensagem {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
+/* CONTAINER DAS MENSAGENS - ABAIXO DA NAVBAR */
+.landing-flash-container {
+    position: fixed;
+    top: 75px;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    padding: 10px 20px;
+    pointer-events: none;
+}
+
+.landing-flash-container .alert-flash {
+    pointer-events: auto;
+    width: 90%;
+    max-width: 600px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.5s ease;
+    transition: opacity 0.5s ease;
+}
+
+.landing-flash-container .alert-flash.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.landing-flash-container .alert-flash.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.landing-flash-container .alert-flash.warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.landing-flash-container .alert-flash.info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.landing-flash-container .alert-flash i {
+    margin-right: 8px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* NAVBAR LANDING */
+.navbar-landing {
+    background: rgba(10, 15, 26, 0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 14px 0;
+}
+
+.navbar-landing .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-landing .nav-left a {
+    font-size: 28px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.navbar-landing .nav-left .tour { color: #f4a261; }
+.navbar-landing .nav-left .quadri { color: #8bb8ff; }
+
+.navbar-landing .nav-right { 
+    display: flex; 
+    gap: 12px; 
+    align-items: center; 
+    flex-wrap: wrap; 
+}
+
+/* BOTÕES DA NAVBAR LANDING */
+.btn-inicio-nav {
+    color: #94a3b8;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-inicio-nav:hover { 
+    color: white; 
+    background: rgba(255,255,255,0.05); 
+}
+
+.btn-entrar-nav {
+    color: #94a3b8;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-entrar-nav:hover { 
+    color: white; 
+    background: rgba(255,255,255,0.05); 
+}
+
+.btn-primary-nav {
+    background: #2563eb;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-nav:hover { 
+    background: #1d4ed8; 
+    transform: translateY(-2px); 
+    box-shadow: 0 5px 20px rgba(37,99,235,0.3); 
+}
+
+/* HERO SECTION - CENTRALIZADO */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(180deg, #0a0f1a 0%, #111827 100%);
+    padding: 200px 20px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero-container { 
+    max-width: 900px; 
+    width: 100%; 
+    margin: 0 auto; 
+    position: relative; 
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(37,99,235,0.12);
+    border: 1px solid rgba(37,99,235,0.15);
+    padding: 6px 20px;
+    border-radius: 50px;
+    font-size: 13px;
+    color: #8bb8ff;
+    font-weight: 500;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+}
+
+.hero-title {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.hero-title .tour { color: #f4a261; }
+.hero-title .quadri { color: #8bb8ff; }
+
+.hero-subtitle {
+    font-size: 20px;
+    color: #94a3b8;
+    line-height: 1.7;
+    max-width: 650px;
+    margin: 0 auto 32px;
+}
+
+.hero-buttons { 
+    display: flex; 
+    gap: 16px; 
+    justify-content: center; 
+    flex-wrap: wrap; 
+    margin-bottom: 48px; 
+}
+
+.hero-buttons .btn {
+    min-width: 160px;
+    height: 50px;
+    font-size: 16px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-hero-primary { 
+    background: #2563eb; 
+    color: white; 
+    border: none; 
+}
+
+.btn-hero-primary:hover { 
+    background: #1d4ed8; 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 30px rgba(37,99,235,0.35); 
+}
+
+.btn-hero-secondary { 
+    background: transparent; 
+    color: white; 
+    border: 2px solid rgba(255,255,255,0.15); 
+}
+
+.btn-hero-secondary:hover { 
+    border-color: #2563eb; 
+    background: rgba(37,99,235,0.08); 
+    transform: translateY(-3px); 
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.hero-stats .stat { text-align: center; }
+.hero-stats .stat-number { 
+    display: block; 
+    font-size: 30px; 
+    font-weight: 700; 
+    color: white; 
+}
+
+.hero-stats .stat-label { 
+    font-size: 14px; 
+    color: #64748b; 
+    margin-top: 4px; 
+}
+
+.hero-stats .stat-icon { 
+    color: #8bb8ff; 
+    margin-right: 4px; 
+}
+
+/* SECTIONS LANDING */
+.section-landing { 
+    padding: 70px 20px; 
+    background: #0f1625; 
+}
+
+.section-landing-alt { 
+    background: #0a0f1a; 
+}
+
+.section-container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+
+.section-header { 
+    text-align: center; 
+    margin-bottom: 50px; 
+}
+
+.section-header .tag {
+    display: inline-block;
+    background: rgba(37,99,235,0.12);
+    color: #8bb8ff;
+    padding: 4px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.section-header h2 { 
+    font-size: 38px; 
+    font-weight: 700; 
+    color: white; 
+    margin-bottom: 12px; 
+}
+
+.section-header h2 .destaque { 
+    color: #f4a261; 
+}
+
+.section-header p { 
+    font-size: 18px; 
+    color: #94a3b8; 
+    max-width: 600px; 
+    margin: 0 auto; 
+}
+
+/* ROTEIROS LANDING GRID - SEM CLICK */
+.roteiros-landing-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 25px; 
+}
+
+.roteiro-landing-card {
+    background: #1a2332;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.4s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.roteiro-landing-card:hover { 
+    transform: translateY(-8px); 
+    border-color: rgba(37,99,235,0.3); 
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+}
+
+.roteiro-landing-card .card-image {
+    height: 200px;
+    background: #0d1520;
+    overflow: hidden;
+    position: relative;
+}
+
+.roteiro-landing-card .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.roteiro-landing-card:hover .card-image img { 
+    transform: scale(1.05); 
+}
+
+.roteiro-landing-card .card-image .card-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    padding: 4px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    color: white;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.roteiro-landing-card .card-body { 
+    padding: 20px; 
+}
+
+.roteiro-landing-card .card-body h3 { 
+    color: white; 
+    font-size: 18px; 
+    margin-bottom: 8px; 
+}
+
+.roteiro-landing-card .card-body .card-meta { 
+    display: flex; 
+    gap: 15px; 
+    flex-wrap: wrap; 
+    margin-bottom: 10px; 
+}
+
+.roteiro-landing-card .card-body .card-meta span { 
+    font-size: 13px; 
+    color: #94a3b8; 
+}
+
+.roteiro-landing-card .card-body .card-meta span i { 
+    color: #8bb8ff; 
+    margin-right: 4px; 
+}
+
+.roteiro-landing-card .card-body .card-desc { 
+    color: #94a3b8; 
+    font-size: 14px; 
+    line-height: 1.5; 
+    margin-bottom: 12px; 
+}
+
+.roteiro-landing-card .card-body .card-price { 
+    font-size: 20px; 
+    font-weight: 700; 
+    color: #f4a261; 
+}
+
+.btn-ver-todos {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 30px;
+}
+
+.btn-ver-todos:hover { 
+    border-color: #2563eb; 
+    background: rgba(37,99,235,0.1); 
+    transform: translateX(5px); 
+}
+
+/* MÁQUINAS LANDING GRID - COM IMAGENS */
+.maquina-imagem {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: #0d1520;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.maquina-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.maquina-landing-card:hover .maquina-imagem img {
+    transform: scale(1.05);
+}
+
+.maquinas-landing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.maquina-landing-card {
+    background: #1a2332;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.4s ease;
+    text-align: center;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.maquina-landing-card:hover { 
+    transform: translateY(-8px); 
+    border-color: rgba(37,99,235,0.3); 
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+}
+
+.maquina-landing-card .maquina-icon { 
+    font-size: 52px; 
+    color: #8bb8ff; 
+    margin-bottom: 16px; 
+}
+
+.maquina-landing-card:hover .maquina-icon i { 
+    transform: scale(1.1); 
+}
+
+.maquina-landing-card h4 { 
+    color: white; 
+    font-size: 18px; 
+    font-weight: 600; 
+    margin-bottom: 6px; 
+}
+
+.maquina-landing-card .maquina-modelo { 
+    color: #94a3b8; 
+    font-size: 14px; 
+}
+
+.maquina-landing-card .maquina-badge {
+    display: inline-block;
+    margin-top: 12px;
+    background: rgba(37,99,235,0.15);
+    color: #8bb8ff;
+    padding: 4px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* CTA SECTION */
+.cta-section {
+    padding: 70px 20px;
+    background: linear-gradient(135deg, #0f1625, #0a0f1a);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+}
+
+.cta-section h2 { 
+    font-size: 36px; 
+    font-weight: 700; 
+    color: white; 
+    margin-bottom: 15px; 
+}
+
+.cta-section p { 
+    font-size: 18px; 
+    color: #94a3b8; 
+    margin-bottom: 30px; 
+    max-width: 600px; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+.cta-section .btn { 
+    min-width: 200px; 
+    height: 52px; 
+    font-size: 17px; 
+    border-radius: 10px; 
+}
+
+.btn-cta-secondary { 
+    background: transparent; 
+    color: white; 
+    border: 2px solid rgba(255,255,255,0.15); 
+}
+
+.btn-cta-secondary:hover { 
+    border-color: #2563eb; 
+    background: rgba(37,99,235,0.08); 
+    transform: translateY(-3px); 
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ==========================
+   RESPONSIVO LANDING - COMPACTO
+========================== */
+
+@media (max-width: 768px) {
+    /* NAVBAR */
+    .navbar-landing { padding: 8px 0; }
+    .navbar-landing .nav-container { padding: 0 12px; }
+    .navbar-landing .nav-left a { font-size: 18px; }
+    .navbar-landing .nav-right { gap: 4px; }
+    .btn-inicio-nav, .btn-entrar-nav { font-size: 10px; padding: 4px 8px; }
+    .btn-primary-nav { font-size: 10px; padding: 5px 10px; }
+
+    /* HERO */
+    .hero-section { padding: 120px 12px 40px; }
+    .hero-badge { font-size: 10px; padding: 3px 10px; margin-bottom: 12px; }
+    .hero-title { font-size: 22px; line-height: 1.2; margin-bottom: 8px; }
+    .hero-subtitle { font-size: 12px; line-height: 1.5; margin-bottom: 18px; max-width: 95%; }
+    .hero-buttons { gap: 8px; margin-bottom: 24px; }
+    .hero-buttons .btn { min-width: 100px; height: 34px; font-size: 11px; padding: 0 14px; }
+    .hero-stats { gap: 12px; padding-top: 18px; }
+    .hero-stats .stat-number { font-size: 16px; }
+    .hero-stats .stat-label { font-size: 9px; }
+
+    /* SECTIONS */
+    .section-landing { padding: 28px 12px; }
+    .section-header { margin-bottom: 20px; }
+    .section-header .tag { font-size: 10px; padding: 3px 8px; }
+    .section-header h2 { font-size: 18px; margin-bottom: 6px; }
+    .section-header p { font-size: 12px; }
+
+    /* 🔥 ROTEIROS LANDING - 2 COLUNAS */
+    .roteiros-landing-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .roteiro-landing-card .card-image { height: 100px; }
+    .roteiro-landing-card .card-body { padding: 8px; }
+    .roteiro-landing-card .card-body h3 { font-size: 11px; margin-bottom: 4px; }
+    .roteiro-landing-card .card-body .card-meta span { font-size: 9px; }
+    .roteiro-landing-card .card-body .card-desc { font-size: 9px; margin-bottom: 4px; }
+    .roteiro-landing-card .card-body .card-price { font-size: 12px; }
+    .roteiro-landing-card .card-image .card-badge { font-size: 8px; padding: 2px 6px; top: 6px; right: 6px; }
+
+    .btn-ver-todos { padding: 8px 14px; font-size: 11px; margin-top: 14px; }
+
+    /* 🔥 MÁQUINAS LANDING - 3 COLUNAS */
+    .maquinas-landing-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        max-width: 100%;
+    }
+    .maquina-landing-card { padding: 8px 6px; border-radius: 8px; }
+    .maquina-landing-card .maquina-icon { font-size: 22px; margin-bottom: 4px; }
+    .maquina-landing-card h4 { font-size: 10px; margin-bottom: 2px; }
+    .maquina-landing-card .maquina-modelo { font-size: 8px; }
+    .maquina-landing-card .maquina-badge { font-size: 8px; padding: 2px 6px; margin-top: 4px; }
+    .maquina-imagem { height: 70px; margin-bottom: 6px; }
+
+    /* CTA */
+    .cta-section { padding: 30px 12px; }
+    .cta-section h2 { font-size: 18px; margin-bottom: 6px; }
+    .cta-section p { font-size: 12px; margin-bottom: 16px; }
+    .cta-section .btn { min-width: 120px; height: 36px; font-size: 11px; }
+    .cta-buttons { gap: 8px; }
+
+    /* FLASH */
+    .landing-flash-container { top: 56px; padding: 6px 10px; }
+    .landing-flash-container .alert-flash { font-size: 10px; padding: 8px 12px; }
+}
+
+@media (max-width: 480px) {
+    /* NAVBAR */
+    .navbar-landing .nav-left a { font-size: 16px; }
+    .btn-inicio-nav, .btn-entrar-nav { font-size: 9px; padding: 3px 6px; }
+    .btn-primary-nav { font-size: 9px; padding: 4px 8px; }
+
+    /* HERO */
+    .hero-section { padding: 100px 10px 30px; }
+    .hero-badge { font-size: 9px; padding: 3px 8px; margin-bottom: 10px; }
+    .hero-title { font-size: 18px; margin-bottom: 6px; }
+    .hero-subtitle { font-size: 11px; margin-bottom: 14px; max-width: 100%; }
+    .hero-buttons { flex-direction: column; align-items: center; margin-bottom: 18px; }
+    .hero-buttons .btn { width: 100%; max-width: 220px; min-width: 0; height: 32px; font-size: 10px; }
+    .hero-stats { gap: 10px; padding-top: 14px; }
+    .hero-stats .stat-number { font-size: 14px; }
+    .hero-stats .stat-label { font-size: 8px; }
+
+    /* SECTIONS */
+    .section-landing { padding: 22px 10px; }
+    .section-header h2 { font-size: 15px; }
+    .section-header p { font-size: 11px; }
+
+    /* ROTEIROS */
+    .roteiros-landing-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .roteiro-landing-card .card-image { height: 80px; }
+    .roteiro-landing-card .card-body { padding: 6px; }
+    .roteiro-landing-card .card-body h3 { font-size: 10px; }
+    .roteiro-landing-card .card-body .card-price { font-size: 11px; }
+
+    /* MÁQUINAS */
+    .maquinas-landing-grid { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .maquina-landing-card { padding: 6px 4px; }
+    .maquina-landing-card .maquina-icon { font-size: 18px; }
+    .maquina-landing-card h4 { font-size: 9px; }
+    .maquina-imagem { height: 60px; }
+
+    /* CTA */
+    .cta-section { padding: 24px 10px; }
+    .cta-section h2 { font-size: 15px; }
+    .cta-section p { font-size: 11px; }
+    .cta-section .btn { min-width: 100%; height: 34px; font-size: 10px; }
+    .cta-buttons { flex-direction: column; }
+
+    /* FLASH */
+    .landing-flash-container { top: 52px; padding: 4px 8px; }
+    .landing-flash-container .alert-flash { font-size: 9px; padding: 6px 10px; }
+}

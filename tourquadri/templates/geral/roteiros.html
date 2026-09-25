@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Nossos Roteiros{% endblock %}
+
+{% block content %}
+<div class="dashboard roteiros-dashboard">
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Nossos Roteiros</h1>
+            <p class="text-muted" style="margin: 5px 0 0 0; font-size: 14px;">
+                Escolha o melhor roteiro para sua aventura
+            </p>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/dashboard">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="roteiros-grid" style="justify-items: center; margin-top: 20px;">
+        {% for id, roteiro in ROTEIROS.items() %}
+        <div class="roteiro-card" onclick="window.location.href='/roteiro/{{ id }}'">
+            <div class="roteiro-imagem-principal">
+                <img src="{{ url_for('static', filename='images/roteiros/' ~ roteiro.foto_principal) }}" 
+                     alt="{{ roteiro.nome }}" 
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2220%22 font-family=%22Arial%22%3E{{ roteiro.nome }}%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="roteiro-info">
+                <h3>{{ roteiro.nome }}</h3>
+                <div class="roteiro-detalhes">
+                    <span><i class="fas fa-clock"></i> {{ roteiro.duracao }} min</span>
+                    <span><i class="fas fa-dollar-sign"></i> {{ roteiro.preco }}</span>
+                    <span><i class="fas fa-signal"></i> {{ roteiro.tipo }}</span>
+                </div>
+                <p class="roteiro-descricao">{{ roteiro.descricao_curta }}</p>
+                <span class="btn-ver-mais">Ver detalhes <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

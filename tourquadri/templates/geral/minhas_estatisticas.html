@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Minhas Estatísticas{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header-flex">
+        <h1><span class="tour">Tour</span><span class="quadri">Quadri</span></h1>
+        <a class="btn btn-padrao btn-voltar" href="/dashboard">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    <!-- Cards de resumo -->
+    <div class="visao-geral-resumo">
+        <div class="visao-card visao-card-azul">
+            <div class="visao-card-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero" id="estTotalPasseios">—</span>
+                <span class="visao-card-label">Total de Passeios</span>
+            </div>
+        </div>
+        <div class="visao-card visao-card-verde">
+            <div class="visao-card-icon"><i class="fas fa-flag-checkered"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero" id="estFinalizados">—</span>
+                <span class="visao-card-label">Finalizados</span>
+            </div>
+        </div>
+        <div class="visao-card visao-card-laranja">
+            <div class="visao-card-icon"><i class="fas fa-clock"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero" id="estAgendados">—</span>
+                <span class="visao-card-label">Agendados</span>
+            </div>
+        </div>
+        <div class="visao-card visao-card-vermelho">
+            <div class="visao-card-icon"><i class="fas fa-times-circle"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero" id="estCancelados">—</span>
+                <span class="visao-card-label">Cancelados</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="visao-geral-grid">
+        <div class="vg-grafico-card vg-grafico-largo">
+            <div class="vg-grafico-header">
+                <h3><i class="fas fa-calendar-alt"></i> Meus Passeios por Mês</h3>
+                <span class="vg-grafico-badge">Últimos 6 meses</span>
+            </div>
+            <div class="vg-grafico-container">
+                <canvas id="graficoClienteMeses"></canvas>
+            </div>
+        </div>
+
+        <div class="vg-grafico-card">
+            <div class="vg-grafico-header">
+                <h3><i class="fas fa-route"></i> Roteiros que Mais Fiz</h3>
+            </div>
+            <div class="vg-grafico-container">
+                <canvas id="graficoClienteRoteiros"></canvas>
+            </div>
+        </div>
+
+        <div class="vg-grafico-card">
+            <div class="vg-grafico-header">
+                <h3><i class="fas fa-chart-pie"></i> Status dos Meus Passeios</h3>
+            </div>
+            <div class="vg-grafico-container">
+                <canvas id="graficoClienteStatus"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard_cliente.js') }}"></script>
+{% endblock %}

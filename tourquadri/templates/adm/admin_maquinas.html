@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Gerenciar Máquinas{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- HEADER -->
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Gerenciar Máquinas</h1>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/admin">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    {% if request.args.get('mensagem') %}
+    <div class="mensagem {{ request.args.get('tipo', 'success') }}">
+        <i class="fas fa-{% if request.args.get('tipo') == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+        {{ request.args.get('mensagem') }}
+    </div>
+    {% endif %}
+
+    <!-- Adicionar Máquina -->
+    <div class="section">
+        <h2><i class="fas fa-plus-circle"></i> Adicionar Nova Máquina</h2>
+        <form method="POST" action="/admin/maquinas/adicionar">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label>Nome da Máquina</label>
+                    <input type="text" name="nome_maquina" placeholder="Ex: Máquina 0, Quadriciclo A" required>
+                </div>
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <input type="text" name="modelo" placeholder="Ex: 0km, Can-Am, Honda" required>
+                </div>
+                <div class="form-group">
+                    <label>CC</label>
+                    <input type="text" name="cc" placeholder="Ex: 500cc, 450cc" required>
+                </div>
+            </div>
+            <button class="btn btn-padrao" type="submit">
+                <i class="fas fa-plus"></i> Adicionar Máquina
+            </button>
+        </form>
+    </div>
+
+    <!-- Lista de Máquinas -->
+    <div class="section">
+        <h2><i class="fas fa-list"></i> Máquinas Existentes</h2>
+        <p class="text-muted">Total: {{ maquinas|length }} máquinas</p>
+        
+        <div class="maquinas-admin-grid-pagina">
+            {% for id, maquina in maquinas.items() %}
+            <div class="maquina-admin-card-pagina">
+                <div class="maquina-admin-imagem">
+                    <img src="{{ url_for('static', filename='images/maquinas/' ~ maquina.modelo ~ '.jpg') }}" 
+                         alt="{{ maquina.modelo }} - {{ maquina.cc }}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2220%22 font-family=%22Arial%22%3E{{ maquina.modelo }}%3C/text%3E%3C/svg%3E'">
+                </div>
+                <div class="maquina-admin-info-pagina">
+                    <h3>{{ maquina.nome_maquina }}</h3>
+                    <p class="maquina-admin-especificacao">{{ maquina.modelo }} - {{ maquina.cc }}</p>
+                </div>
+                <div class="maquina-admin-actions-pagina">
+                    <button class="btn btn-pequeno" onclick="abrirModal('modal-{{ id }}')">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-pequeno btn-danger" onclick="confirmarExclusao('/admin/maquinas/excluir/{{ id }}', 'ATENÇÃO: Esta máquina pode estar em uso. Tem certeza que deseja excluí-la? Os clientes afetados receberão um email de aviso.', 'Excluir Máquina')">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Editar -->
+            <div id="modal-{{ id }}" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="modal-close" onclick="fecharModal('modal-{{ id }}')">&times;</span>
+                    <h2>Editar Máquina</h2>
+                    <form method="POST" action="/admin/maquinas/editar/{{ id }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Nome da Máquina</label>
+                                <input type="text" name="nome_maquina" value="{{ maquina.nome_maquina }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Modelo</label>
+                                <input type="text" name="modelo" value="{{ maquina.modelo }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>CC</label>
+                                <input type="text" name="cc" value="{{ maquina.cc }}" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-padrao" type="submit">
+                                <i class="fas fa-save"></i> Salvar Alterações
+                            </button>
+                            <button class="btn btn-padrao" type="button" onclick="fecharModal('modal-{{ id }}')">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+function abrirModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+}
+
+function fecharModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target.className === 'modal') {
+        event.target.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

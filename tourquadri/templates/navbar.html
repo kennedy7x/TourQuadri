@@ -1,0 +1,41 @@
+<nav class="navbar-custom">
+    <div class="nav-container">
+        <div class="nav-left">
+            <a href="/">
+                <span class="tour">Tour</span><span class="quadri">Quadri</span>
+            </a>
+        </div>
+        <div class="nav-right">
+            <a class="btn-nav" href="/">
+                <i class="fas fa-home"></i> Início
+            </a>
+            <a class="btn-nav" href="/#roteiros">
+                <i class="fas fa-route"></i> Roteiros
+            </a>
+            <a class="btn-nav" href="/#maquinas">
+                <i class="fas fa-tractor"></i> Máquinas
+            </a>
+
+            {% if session and session.get('usuario') %}
+                <a class="btn-nav" href="/conta">
+                    <i class="fas fa-user-cog"></i> Minha Conta
+                </a>
+                {% if session.get('usuario') == 'tourquadri@gmail.com' %}
+                <a class="btn-nav" href="/admin">
+                    <i class="fas fa-crown"></i> Painel Admin
+                </a>
+                {% endif %}
+                <a class="btn-nav btn-logout" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            {% else %}
+                <a class="btn-nav" href="/login">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </a>
+                <a class="btn-nav" href="/register">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

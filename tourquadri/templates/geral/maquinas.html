@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Nossas Máquinas{% endblock %}
+
+{% block content %}
+<div class="dashboard maquinas-dashboard">
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Nossas Máquinas</h1>
+            <p class="text-muted" style="margin: 5px 0 0 0; font-size: 14px;">
+                Conheça nossa frota de quadriciclos disponíveis
+            </p>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/dashboard">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="maquinas-grid-pagina" style="justify-items: center; margin-top: 20px;">
+        {% for id, maquina in maquinas_especificacoes.items() %}
+        {% set i = id|int %}
+        <div class="maquina-card" style="width: 100%; max-width: 280px;">
+            <div class="maquina-imagem">
+                <img src="{{ url_for('static', filename='images/maquinas/' ~ maquina.modelo ~ '.jpg') }}" 
+                     alt="{{ maquina.modelo }} - {{ maquina.cc }}"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2220%22 font-family=%22Arial%22%3E{{ maquina.modelo }}%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="maquina-info">
+                <h3>Máquina {{ i }}</h3>
+                <p class="maquina-especificacao">{{ maquina.modelo }} - {{ maquina.cc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

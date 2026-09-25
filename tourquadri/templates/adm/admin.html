@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Painel Admin{% endblock %}
+
+{% block content %}
+<div class="dashboard admin-dashboard">
+    <!-- HEADER -->
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Painel Administrativo</h1>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/conta">
+                <i class="fas fa-user-cog"></i> Minha Conta
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-stats-grid">
+        <div class="admin-stat-card admin-stat-total">
+            <div class="admin-stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="admin-stat-info">
+                <span class="admin-stat-number">{{ total_agendamentos }}</span>
+                <span class="admin-stat-label">Total de Agendamentos</span>
+            </div>
+        </div>
+        <div class="admin-stat-card admin-stat-agendados">
+            <div class="admin-stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="admin-stat-info">
+                <span class="admin-stat-number">{{ total_agendados }}</span>
+                <span class="admin-stat-label">Agendados</span>
+            </div>
+        </div>
+        <div class="admin-stat-card admin-stat-andamento">
+            <div class="admin-stat-icon"><i class="fas fa-play"></i></div>
+            <div class="admin-stat-info">
+                <span class="admin-stat-number">{{ total_em_andamento }}</span>
+                <span class="admin-stat-label">Em Andamento</span>
+            </div>
+        </div>
+        <div class="admin-stat-card admin-stat-finalizados">
+            <div class="admin-stat-icon"><i class="fas fa-flag-checkered"></i></div>
+            <div class="admin-stat-info">
+                <span class="admin-stat-number">{{ total_finalizados }}</span>
+                <span class="admin-stat-label">Finalizados</span>
+            </div>
+        </div>
+        <div class="admin-stat-card admin-stat-cancelados">
+            <div class="admin-stat-icon"><i class="fas fa-times-circle"></i></div>
+            <div class="admin-stat-info">
+                <span class="admin-stat-number">{{ total_cancelados }}</span>
+                <span class="admin-stat-label">Cancelados</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-actions-grid">
+        <a href="/admin/realizar_agendamento" class="admin-action-card">
+            <i class="fas fa-calendar-plus"></i>
+            <h3>Realizar Agendamento</h3>
+            <p>Agendar um novo passeio para um cliente</p>
+        </a>
+        <a href="/admin/gerenciar_horarios" class="admin-action-card">
+            <i class="fas fa-clock"></i>
+            <h3>Gerenciar Horários</h3>
+            <p>Bloquear ou desbloquear horários</p>
+        </a>
+        <a href="/admin/agendamentos" class="admin-action-card">
+            <i class="fas fa-list"></i>
+            <h3>Gerenciar Agendamentos</h3>
+            <p>Ver e gerenciar todos os agendamentos</p>
+        </a>
+    </div>
+
+    <div class="admin-section">
+        <div class="admin-section-header">
+            <h2><i class="fas fa-list"></i> Últimos Agendamentos</h2>
+        </div>
+        <div class="admin-table-container">
+            {% if ultimos %}
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Cliente</th>
+                        <th>Roteiro</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agendamento in ultimos %}
+                    <tr>
+                        <td>{% set data_parts = agendamento.data.split('-') %}{{ data_parts[2] }}/{{ data_parts[1] }}/{{ data_parts[0] }}</td>
+                        <td>{{ agendamento.horario }}</td>
+                        <td>{{ agendamento.nome_cliente or agendamento.nome_usuario or agendamento.usuario }}</td>
+                        <td>{{ ROTEIROS.get(agendamento.roteiro, {}).get('nome', 'Não definido') }}</td>
+                        <td><span class="status-badge status-{{ agendamento.status or 'agendado' }}">{{ (agendamento.status or 'agendado')|upper }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state"><i class="fas fa-calendar-times"></i><p>Nenhum agendamento encontrado</p></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <div class="admin-section-header"><h2><i class="fas fa-cog"></i> Gerenciamento</h2></div>
+        <div class="admin-menu-grid">
+            <a href="/admin/roteiros" class="admin-menu-card">
+                <i class="fas fa-route"></i><h3>Roteiros</h3><p>Adicionar, editar ou excluir roteiros</p>
+            </a>
+            <a href="/admin/maquinas" class="admin-menu-card">
+                <i class="fas fa-tractor"></i><h3>Máquinas</h3><p>Adicionar, editar ou excluir máquinas</p>
+            </a>
+            <a href="/admin/visao_geral" class="admin-menu-card">
+                <i class="fas fa-chart-line"></i><h3>Visão Geral</h3><p>Gráficos e estatísticas do sistema</p>
+            </a>
+            <a href="/admin/logs" class="admin-menu-card">
+                <i class="fas fa-history"></i><h3>Logs</h3><p>Histórico de ações dos administradores</p>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

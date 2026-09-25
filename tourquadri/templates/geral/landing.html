@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Aventura sobre Rodas{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="landing-wrapper">
+    <!-- FLASH MESSAGES NA LANDING -->
+    <div class="landing-flash-container" id="landingFlashContainer">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert-flash {{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'warning' %}exclamation-triangle{% else %}exclamation-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <nav class="navbar-landing">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/">
+                    <span class="tour">Tour</span><span class="quadri">Quadri</span>
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/" class="btn-inicio-nav">
+                    <i class="fas fa-home"></i> Início
+                </a>
+                {% if session and session.get('usuario') %}
+                    <a class="btn-entrar-nav" href="/dashboard">Dashboard</a>
+                    <a class="btn-primary-nav" href="/logout">Sair</a>
+                {% else %}
+                    <a class="btn-entrar-nav" href="/login">Entrar</a>
+                    <a class="btn-primary-nav" href="/register">Criar Conta</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section" id="inicio">
+        <div class="hero-container">
+            <div class="hero-badge"><i class="fas fa-star"></i> Melhor experiência de quadriciclo</div>
+            <h1 class="hero-title">Explore trilhas incríveis com a<br><span class="tour">Tour</span><span class="quadri">Quadri</span></h1>
+            <p class="hero-subtitle">Viva uma aventura inesquecível pelas montanhas, cachoeiras e mirantes mais bonitos da região. Segurança, emoção e paisagens de tirar o fôlego.</p>
+            <div class="hero-buttons">
+                <a href="#roteiros" class="btn btn-hero-primary"><i class="fas fa-route"></i> Ver Roteiros</a>
+                <a href="#maquinas" class="btn btn-hero-secondary"><i class="fas fa-tractor"></i> Ver Máquinas</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat"><span class="stat-number"><i class="fas fa-route stat-icon"></i> {{ ROTEIROS|length }}+</span><span class="stat-label">Roteiros</span></div>
+                <div class="stat"><span class="stat-number"><i class="fas fa-motorcycle stat-icon"></i> {{ TOTAL_MAQUINAS }}</span><span class="stat-label">Quadriciclos</span></div>
+                <div class="stat"><span class="stat-number"><i class="fas fa-shield-alt stat-icon"></i> 100%</span><span class="stat-label">Segurança</span></div>
+                <div class="stat"><span class="stat-number"><i class="fas fa-star stat-icon"></i> 5</span><span class="stat-label">Estrelas</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-landing" id="roteiros">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="tag"><i class="fas fa-route"></i> Nossos Roteiros</span>
+                <h2>Escolha sua <span class="destaque">Aventura</span></h2>
+                <p>Trilhas para todos os níveis, com paisagens que vão te surpreender</p>
+            </div>
+            <div class="roteiros-landing-grid">
+                {% for id, roteiro in ROTEIROS.items() %}
+                <div class="roteiro-landing-card">
+                    <div class="card-image">
+                        <img src="{{ url_for('static', filename='images/roteiros/' ~ roteiro.foto_principal) }}" alt="{{ roteiro.nome }}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%231a2332%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%2394a3b8%22 font-size=%2220%22 font-family=%22Arial%22%3E{{ roteiro.nome }}%3C/text%3E%3C/svg%3E'">
+                        <span class="card-badge">{{ roteiro.tipo }}</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>{{ roteiro.nome }}</h3>
+                        <div class="card-meta">
+                            <span><i class="fas fa-clock"></i> {{ roteiro.duracao }} min</span>
+                            <span><i class="fas fa-camera"></i> {{ roteiro.paradas }}</span>
+                        </div>
+                        <p class="card-desc">{{ roteiro.descricao_curta }}</p>
+                        <span class="card-price">{{ roteiro.preco }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-center">
+                {% if session and session.get('usuario') %}
+                    <a href="/roteiros" class="btn-ver-todos">Ver todos os roteiros <i class="fas fa-arrow-right"></i></a>
+                {% else %}
+                    <a href="/login" class="btn-ver-todos">Faça login para ver todos os roteiros <i class="fas fa-arrow-right"></i></a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section-landing section-landing-alt" id="maquinas">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Nossos <span class="destaque">Modelos</span></h2>
+                <p>Quadriciclos novos e preparados para qualquer trilha</p>
+            </div>
+            <div class="maquinas-landing-grid">
+                <div class="maquina-landing-card">
+                    <div class="maquina-imagem">
+                        <img src="{{ url_for('static', filename='images/maquinas/Can-Am 2014.jpg') }}" 
+                             alt="Can-Am 2014"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%231a2332%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%2394a3b8%22 font-size=%2220%22 font-family=%22Arial%22%3ECan-Am%202014%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <h4>Can-Am 2014</h4>
+                    <p class="maquina-modelo">Potência e confiabilidade</p>
+                    <span class="maquina-badge">Disponível</span>
+                </div>
+
+                <div class="maquina-landing-card">
+                    <div class="maquina-imagem">
+                        <img src="{{ url_for('static', filename='images/maquinas/Can-Am 2026.jpg') }}" 
+                             alt="Can-Am 2026"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%231a2332%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%2394a3b8%22 font-size=%2220%22 font-family=%22Arial%22%3ECan-Am%202026%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <h4>Can-Am 2026</h4>
+                    <p class="maquina-modelo">O novo lançamento</p>
+                    <span class="maquina-badge">Novo</span>
+                </div>
+
+                <div class="maquina-landing-card">
+                    <div class="maquina-imagem">
+                        <img src="{{ url_for('static', filename='images/maquinas/Ventura 500 Pro Max 2026.jpg') }}" 
+                             alt="Ventura 500 Pro Max 2026"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%231a2332%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%2394a3b8%22 font-size=%2220%22 font-family=%22Arial%22%3EVentura%20Pro%20Max%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <h4>Ventura 500 Pro Max 2026</h4>
+                    <p class="maquina-modelo">O máximo em aventura</p>
+                    <span class="maquina-badge">Premium</span>
+                </div>
+
+                <div class="maquina-landing-card">
+                    <div class="maquina-imagem">
+                        <img src="{{ url_for('static', filename='images/maquinas/Buggy 2026.jpg') }}" 
+                             alt="Buggy 2026"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%231a2332%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%2394a3b8%22 font-size=%2220%22 font-family=%22Arial%22%3EBuggy%202026%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <h4>Buggy 2026</h4>
+                    <p class="maquina-modelo">Aventura e diversão</p>
+                    <span class="maquina-badge">Disponível</span>
+                </div>
+            </div>
+            <div class="text-center" style="margin-top: 30px;">
+                {% if session and session.get('usuario') %}
+                    <a href="/maquinas" class="btn-ver-todos">Conheça todas as máquinas <i class="fas fa-arrow-right"></i></a>
+                {% else %}
+                    <a href="/login" class="btn-ver-todos">Faça login para conhecer todas as máquinas <i class="fas fa-arrow-right"></i></a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="section-container">
+            <h2>Pronto para <span class="tour">viver</span> essa <span class="quadri">aventura</span>?</h2>
+            <p>Agende seu passeio agora e descubra paisagens que você nunca imaginou</p>
+            <div class="cta-buttons">
+                {% if session and session.get('usuario') %}
+                    <a href="/dashboard" class="btn btn-hero-primary"><i class="fas fa-tachometer-alt"></i> Ir para Dashboard</a>
+                {% else %}
+                    <a href="/register" class="btn btn-hero-primary"><i class="fas fa-user-plus"></i> Criar Conta</a>
+                    <a href="/login" class="btn btn-cta-secondary"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var flashContainer = document.getElementById('landingFlashContainer');
+        if (flashContainer) {
+            var flashMessages = flashContainer.querySelectorAll('.alert-flash');
+            if (flashMessages.length > 0) {
+                setTimeout(function() {
+                    flashContainer.style.transition = 'opacity 0.5s ease';
+                    flashContainer.style.opacity = '0';
+                    setTimeout(function() {
+                        flashContainer.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            }
+        }
+    });
+</script>
+{% endblock %}

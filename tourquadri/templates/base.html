@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TourQuadri{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <main>
+        <!-- ====== FLASH MESSAGES ====== -->
+        {% if request.endpoint != 'landing' %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mensagem {{ category }}">
+                            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'warning' %}exclamation-triangle{% else %}exclamation-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- MODAL DE CONFIRMAÇÃO (SUBSTITUI O CONFIRM() DO NAVEGADOR) -->
+    <!-- ============================================================ -->
+    <div id="modalConfirmacao" class="modal-confirmacao" style="display: none;">
+        <div class="modal-confirmacao-overlay"></div>
+        <div class="modal-confirmacao-box">
+            <div class="modal-confirmacao-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 id="modalConfirmacaoTitulo">Confirmar ação</h3>
+            <p id="modalConfirmacaoMensagem">Tem certeza que deseja realizar esta ação?</p>
+            <div class="modal-confirmacao-botoes">
+                <button class="btn btn-pequeno" id="modalConfirmacaoCancelar">Cancelar</button>
+                <button class="btn btn-pequeno btn-danger" id="modalConfirmacaoConfirmar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 - TourQuadri - Todos os direitos reservados</p>
+    </footer>
+
+    <!-- Chart.js (versão fixada para estabilidade) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

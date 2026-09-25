@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Meus Agendamentos{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header-flex">
+        <h1><i class="fas fa-calendar-alt"></i> Meus Agendamentos</h1>
+        <a class="btn btn-padrao btn-voltar" href="/conta">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    {% if agendamentos %}
+    <div class="agendamentos-grid">
+        {% for agendamento in agendamentos %}
+        <div class="agendamento-card">
+            <div class="agendamento-header">
+                <span class="status-badge status-{{ agendamento.status or 'agendado' }}">
+                    {{ (agendamento.status or 'agendado')|upper }}
+                </span>
+                {% if agendamento.desconto_aplicado %}
+                <span class="status-badge status-desconto">
+                    <i class="fas fa-gift"></i> DESCONTO 20%
+                </span>
+                {% endif %}
+                {% if agendamento.criado_por_admin and admin %}
+                <span class="status-badge status-admin">Agendado pelo admin</span>
+                {% endif %}
+            </div>
+            <div class="agendamento-body">
+                {% if admin and agendamento.criado_por_admin %}
+                <p><strong>Cliente:</strong> {{ agendamento.nome_cliente or agendamento.nome_usuario or agendamento.usuario }}</p>
+                <p><strong>Telefone:</strong> {{ agendamento.telefone_cliente or '' }}</p>
+                <p><strong>Email:</strong> {{ agendamento.email_cliente or agendamento.usuario }}</p>
+                {% endif %}
+                <p><strong>Data:</strong> 
+                    {% set data_parts = agendamento.data.split('-') %}
+                    {{ data_parts[2] }}/{{ data_parts[1] }}/{{ data_parts[0] }}
+                </p>
+                <p><strong>Horário:</strong> {{ agendamento.horario }}</p>
+                <p><strong>Roteiro:</strong> {{ ROTEIROS.get(agendamento.roteiro, {}).get('nome', 'Não definido') }}</p>
+                <p><strong>Máquinas:</strong> 
+                    {% set maquinas_list = agendamento.maquinas if agendamento.maquinas is iterable and agendamento.maquinas is not string else [agendamento.maquinas] %}
+                    {{ maquinas_list|length }}
+                </p>
+                <div class="maquinas-lista">
+                    {% if agendamento.maquinas is iterable and agendamento.maquinas is not string %}
+                        {% for maquina in agendamento.maquinas %}
+                        <span class="maquina-item-lista">• Máquina {{ maquina }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="maquina-item-lista">• Máquina {{ agendamento.maquinas }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="agendamento-actions">
+                {% if agendamento.status == 'agendado' %}
+                    <a class="btn btn-pequeno" href="/editar_agendamento/{{ agendamento.id }}">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <button class="btn btn-pequeno btn-danger" onclick="confirmarExclusao('/cancelar_agendamento/{{ agendamento.id }}', 'Tem certeza que deseja cancelar este agendamento?', 'Cancelar Agendamento')">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                {% elif agendamento.status == 'em_andamento' %}
+                    <span class="status-badge status-em_andamento status-grande">
+                        <i class="fas fa-hourglass-half"></i> Passeio em andamento
+                    </span>
+                {% elif agendamento.status == 'finalizado' %}
+                    <span class="status-badge status-finalizado status-grande">
+                        <i class="fas fa-check-circle"></i> Passeio finalizado
+                    </span>
+                {% elif agendamento.status == 'cancelado' %}
+                    <span class="status-badge status-cancelado status-grande">
+                        <i class="fas fa-times-circle"></i> Passeio cancelado
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-calendar-times"></i>
+        <p>Nenhum agendamento encontrado.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function confirmarExclusao(url, mensagem, titulo) {
+    if (typeof confirmarAcao === 'function') {
+        confirmarAcao(mensagem, titulo).then(function(resultado) {
+            if (resultado) {
+                window.location.href = url;
+            }
+        });
+    } else {
+        if (confirm(mensagem)) {
+            window.location.href = url;
+        }
+    }
+}
+</script>
+{% endblock %}

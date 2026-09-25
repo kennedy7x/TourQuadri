@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Logs de Atividades{% endblock %}
+
+{% block content %}
+<div class="dashboard admin-dashboard">
+    <!-- HEADER -->
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Logs de Atividades</h1>
+            <p class="text-muted" style="margin: 5px 0 0 0; font-size: 14px;">
+                Histórico de ações realizadas no painel administrativo
+            </p>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/admin">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    <!-- Cards de resumo -->
+    <div class="visao-geral-resumo">
+        <div class="visao-card visao-card-azul">
+            <div class="visao-card-icon"><i class="fas fa-list"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero">{{ total }}</span>
+                <span class="visao-card-label">Total de Logs</span>
+            </div>
+        </div>
+        <div class="visao-card visao-card-verde">
+            <div class="visao-card-icon"><i class="fas fa-users-cog"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero">{{ admins_unicos|length }}</span>
+                <span class="visao-card-label">Admins Ativos</span>
+            </div>
+        </div>
+        <div class="visao-card visao-card-laranja">
+            <div class="visao-card-icon"><i class="fas fa-tags"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero">{{ categorias|length }}</span>
+                <span class="visao-card-label">Categorias</span>
+            </div>
+        </div>
+        <div class="visao-card visao-card-roxo">
+            <div class="visao-card-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="visao-card-info">
+                <span class="visao-card-numero">{{ pagina_atual }}/{{ total_paginas }}</span>
+                <span class="visao-card-label">Página Atual</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="section">
+        <h2><i class="fas fa-filter"></i> Filtros</h2>
+        <form method="GET" action="/admin/logs" class="filtros-form">
+            <div class="filtros-grid">
+                <div class="form-group">
+                    <label>Buscar</label>
+                    <input type="text" name="busca" placeholder="Ação, detalhes ou email..."
+                           value="{{ filtro_busca }}">
+                </div>
+                <div class="form-group">
+                    <label>Admin</label>
+                    <select name="admin">
+                        <option value="">Todos os admins</option>
+                        {% for adm in admins_unicos %}
+                        <option value="{{ adm }}" {% if filtro_admin == adm %}selected{% endif %}>
+                            {{ adm }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select name="categoria">
+                        <option value="">Todas as categorias</option>
+                        {% for cat in categorias %}
+                        <option value="{{ cat }}" {% if filtro_categoria == cat %}selected{% endif %}>
+                            {{ cat|capitalize }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="date" name="data" value="{{ filtro_data }}">
+                </div>
+            </div>
+            <div class="filtros-actions">
+                <button class="btn btn-padrao" type="submit">
+                    <i class="fas fa-search"></i> Filtrar
+                </button>
+                <a class="btn btn-padrao" href="/admin/logs">
+                    <i class="fas fa-undo"></i> Limpar
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de logs -->
+    <div class="section">
+        <h2><i class="fas fa-history"></i> Histórico</h2>
+
+        {% if logs %}
+        <div class="logs-lista">
+            {% for log in logs %}
+            <div class="log-item">
+                <div class="log-icon log-icon-{{ 'auth' if log.acao in ['Login', 'Logout', 'Alterou senha'] else 'agendamento' if 'agendamento' in log.acao.lower() or 'passeio' in log.acao.lower() or 'lembrete' in log.acao.lower() else 'maquina' if 'máquina' in log.acao.lower() else 'roteiro' if 'roteiro' in log.acao.lower() else 'horario' if 'horário' in log.acao.lower() or 'horários' in log.acao.lower() else 'outro' }}">
+                    <i class="fas fa-{% if log.acao in ['Login', 'Logout', 'Alterou senha'] %}user-shield{% elif 'máquina' in log.acao.lower() %}tractor{% elif 'roteiro' in log.acao.lower() %}route{% elif 'horário' in log.acao.lower() or 'horários' in log.acao.lower() %}clock{% elif 'passeio' in log.acao.lower() %}flag-checkered{% elif 'agendamento' in log.acao.lower() %}calendar-check{% elif 'lembrete' in log.acao.lower() %}envelope{% else %}info-circle{% endif %}"></i>
+                </div>
+                <div class="log-content">
+                    <div class="log-header">
+                        <span class="log-acao">{{ log.acao }}</span>
+                        <span class="log-data">{{ log.data_hora.strftime('%d/%m/%Y às %H:%M') }}</span>
+                    </div>
+                    {% if log.detalhes %}
+                    <p class="log-detalhes">{{ log.detalhes }}</p>
+                    {% endif %}
+                    <div class="log-meta">
+                        <span><i class="fas fa-user-shield"></i> {{ log.admin_email }}</span>
+                        {% if log.ip %}
+                        <span><i class="fas fa-network-wired"></i> {{ log.ip }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginação -->
+        {% if total_paginas > 1 %}
+        <div class="pagination">
+            {% if pagina_atual > 1 %}
+            <a href="?pagina={{ pagina_atual - 1 }}{% if filtro_busca %}&busca={{ filtro_busca }}{% endif %}{% if filtro_admin %}&admin={{ filtro_admin }}{% endif %}{% if filtro_categoria %}&categoria={{ filtro_categoria }}{% endif %}{% if filtro_data %}&data={{ filtro_data }}{% endif %}" class="page-link">
+                <i class="fas fa-chevron-left"></i> Anterior
+            </a>
+            {% else %}
+            <span class="page-link disabled"><i class="fas fa-chevron-left"></i> Anterior</span>
+            {% endif %}
+
+            {% for p in paginas %}
+                {% if p == pagina_atual %}
+                <span class="page-link active">{{ p }}</span>
+                {% elif p <= 2 or p >= total_paginas - 1 or (p >= pagina_atual - 2 and p <= pagina_atual + 2) %}
+                <a href="?pagina={{ p }}{% if filtro_busca %}&busca={{ filtro_busca }}{% endif %}{% if filtro_admin %}&admin={{ filtro_admin }}{% endif %}{% if filtro_categoria %}&categoria={{ filtro_categoria }}{% endif %}{% if filtro_data %}&data={{ filtro_data }}{% endif %}" class="page-link">{{ p }}</a>
+                {% elif p == 3 or p == total_paginas - 2 %}
+                <span class="page-link dots">...</span>
+                {% endif %}
+            {% endfor %}
+
+            {% if pagina_atual < total_paginas %}
+            <a href="?pagina={{ pagina_atual + 1 }}{% if filtro_busca %}&busca={{ filtro_busca }}{% endif %}{% if filtro_admin %}&admin={{ filtro_admin }}{% endif %}{% if filtro_categoria %}&categoria={{ filtro_categoria }}{% endif %}{% if filtro_data %}&data={{ filtro_data }}{% endif %}" class="page-link">
+                Próximo <i class="fas fa-chevron-right"></i>
+            </a>
+            {% else %}
+            <span class="page-link disabled">Próximo <i class="fas fa-chevron-right"></i></span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Nenhum log encontrado com esses filtros.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

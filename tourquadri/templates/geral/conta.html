@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Minha Conta{% endblock %}
+
+{% block navbar %}
+    {% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1><i class="fas fa-user-circle"></i> Minha Conta</h1>
+    
+    <div class="conta-info">
+        <div class="info-item">
+            <span class="info-label"><i class="fas fa-user"></i> Nome:</span>
+            <span class="info-value">{{ usuario.nome }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label"><i class="fas fa-phone"></i> Telefone:</span>
+            <span class="info-value">{{ usuario.telefone }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label"><i class="fas fa-envelope"></i> E-mail:</span>
+            <span class="info-value">{{ usuario.email }}</span>
+        </div>
+    </div>
+
+    <div class="conta-actions">
+        <a class="btn btn-padrao" href="/meus_agendamentos">
+            <i class="fas fa-calendar-alt"></i> Meus Agendamentos
+        </a>
+        <a class="btn btn-padrao" href="/alterar_senha">
+            <i class="fas fa-key"></i> Alterar Senha
+        </a>
+        <a class="btn btn-padrao btn-danger" href="/logout">
+            <i class="fas fa-sign-out-alt"></i> Sair
+        </a>
+        {% if session.get('usuario') == 'tourquadri@gmail.com' %}
+        <a class="btn btn-padrao" href="/admin">
+            <i class="fas fa-arrow-left"></i> Voltar ao Painel
+        </a>
+        {% else %}
+        <a class="btn btn-padrao" href="/dashboard">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

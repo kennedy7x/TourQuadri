@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Visão Geral{% endblock %}
+
+{% block content %}
+<div class="dashboard admin-dashboard">
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Visão Geral</h1>
+            <p class="text-muted" style="margin: 5px 0 0 0; font-size: 14px;">
+                Gráficos e estatísticas do sistema
+            </p>
+        </div>
+        <div class="admin-header-right">
+            <a class="btn btn-padrao btn-voltar" href="/admin">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="visao-geral-grid">
+        <div class="vg-grafico-card vg-grafico-largo">
+            <div class="vg-grafico-header">
+                <h3><i class="fas fa-calendar-alt"></i> Agendamentos nos Últimos 30 Dias</h3>
+                <span class="vg-grafico-badge">Tendência</span>
+            </div>
+            <div class="vg-grafico-container">
+                <canvas id="graficoAdminDias"></canvas>
+            </div>
+        </div>
+
+        <div class="vg-grafico-card">
+            <div class="vg-grafico-header">
+                <h3><i class="fas fa-route"></i> Roteiros Mais Procurados</h3>
+            </div>
+            <div class="vg-grafico-container">
+                <canvas id="graficoAdminRoteiros"></canvas>
+            </div>
+        </div>
+
+        <div class="vg-grafico-card">
+            <div class="vg-grafico-header">
+                <h3><i class="fas fa-clock"></i> Horários Mais Procurados</h3>
+            </div>
+            <div class="vg-grafico-container">
+                <canvas id="graficoAdminHorarios"></canvas>
+            </div>
+        </div>
+
+        <div class="vg-grafico-card vg-grafico-largo">
+            <div class="vg-grafico-header">
+                <h3><i class="fas fa-tractor"></i> Top 10 Máquinas Mais Usadas</h3>
+                <span class="vg-grafico-badge">Ranking</span>
+            </div>
+            <div class="vg-grafico-container vg-grafico-container-barras">
+                <canvas id="graficoAdminMaquinas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard_admin.js') }}"></script>
+{% endblock %}

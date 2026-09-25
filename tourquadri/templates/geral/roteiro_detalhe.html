@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ roteiro.nome }} - TourQuadri{% endblock %}
+
+{% block content %}
+<div class="dashboard roteiro-detalhe-container">
+    <div class="dashboard-header-flex">
+        <h1>
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </h1>
+        <a class="btn btn-padrao btn-voltar" href="
+            {%- if session.get('usuario') == 'tourquadri@gmail.com' -%}
+                /admin/roteiros
+            {%- else -%}
+                /roteiros
+            {%- endif -%}
+        ">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    <div class="roteiro-detalhe">
+        <div class="roteiro-detalhe-imagem-principal">
+            <img src="{{ url_for('static', filename='images/roteiros/' ~ roteiro.foto_principal) }}" 
+                 alt="{{ roteiro.nome }}"
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22400%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22800%22 height=%22400%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2230%22 font-family=%22Arial%22%3E{{ roteiro.nome }}%3C/text%3E%3C/svg%3E'">
+        </div>
+
+        <div class="roteiro-detalhe-info">
+            <h2>{{ roteiro.nome }}</h2>
+            <div class="roteiro-detalhe-metas">
+                <span><i class="fas fa-clock"></i> {{ roteiro.duracao }} minutos</span>
+                <span><i class="fas fa-dollar-sign"></i> {{ roteiro.preco }}</span>
+                <span><i class="fas fa-signal"></i> Nível: {{ roteiro.tipo }}</span>
+                <span><i class="fas fa-camera"></i> {{ roteiro.paradas }}</span>
+            </div>
+            <div class="roteiro-detalhe-descricao">
+                <h3><i class="fas fa-info-circle"></i> Sobre o passeio</h3>
+                <p>{{ roteiro.descricao_completa }}</p>
+            </div>
+            
+            <div class="roteiro-detalhe-inclui">
+                <h3><i class="fas fa-check-circle"></i> O que está incluso</h3>
+                <ul>
+                    {% for item in roteiro.inclui %}
+                    <li><i class="fas fa-check"></i> {{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="roteiro-detalhe-galeria">
+                <h3><i class="fas fa-images"></i> Galeria</h3>
+                <div class="galeria-grid">
+                    {% for foto in roteiro.galeria %}
+                    <img src="{{ url_for('static', filename='images/roteiros/' ~ foto) }}" 
+                         alt="Foto do {{ roteiro.nome }}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22300%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2218%22 font-family=%22Arial%22%3EFoto%3C/text%3E%3C/svg%3E'">
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="roteiro-detalhe-actions">
+                {% if session and session.get('usuario') %}
+                    {% if session.get('usuario') != 'tourquadri@gmail.com' %}
+                        <a class="btn btn-padrao" href="/agendar_roteiro/{{ id }}">
+                            <i class="fas fa-calendar-plus"></i> Agendar Passeio
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a class="btn btn-padrao" href="/login?next={{ request.path }}">
+                        <i class="fas fa-sign-in-alt"></i> Faça login para agendar
+                    </a>
+                    <p class="text-muted text-center" style="margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> Você precisa estar logado para agendar um passeio
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

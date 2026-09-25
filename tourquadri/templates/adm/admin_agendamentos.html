@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Agendamentos (Admin){% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- HEADER -->
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <span class="tour">Tour</span><span class="quadri">Quadri</span>
+        </div>
+        <div class="admin-header-center">
+            <h1>Gerenciar Agendamentos</h1>
+        </div>
+        <div class="admin-header-right">
+            <div class="admin-header-actions">
+                <a class="btn btn-padrao btn-exportar" href="/admin/exportar_pdf">
+                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                </a>
+                <a class="btn btn-padrao btn-voltar" href="/admin">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="estatisticas-admin">
+        <div class="stat-card">
+            <i class="fas fa-calendar-check"></i>
+            <div>
+                <span class="stat-numero">{{ total_exibido }}</span>
+                <span class="stat-label">{{ label_exibido }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2><i class="fas fa-bolt"></i> Filtros Rápidos</h2>
+        <div class="filtros-rapidos">
+            <a href="/admin/agendamentos" class="btn-filtro-rapido {% if not filtro_status %}ativo{% endif %}"><i class="fas fa-list"></i> Todos</a>
+            <a href="/admin/agendamentos?status=agendado" class="btn-filtro-rapido {% if filtro_status == 'agendado' %}ativo{% endif %}"><i class="fas fa-clock"></i> Agendados</a>
+            <a href="/admin/agendamentos?status=em_andamento" class="btn-filtro-rapido {% if filtro_status == 'em_andamento' %}ativo{% endif %}"><i class="fas fa-play"></i> Em Andamento</a>
+            <a href="/admin/agendamentos?status=finalizado" class="btn-filtro-rapido {% if filtro_status == 'finalizado' %}ativo{% endif %}"><i class="fas fa-flag-checkered"></i> Finalizados</a>
+            <a href="/admin/agendamentos?status=cancelado" class="btn-filtro-rapido {% if filtro_status == 'cancelado' %}ativo{% endif %}"><i class="fas fa-times"></i> Cancelados</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2><i class="fas fa-filter"></i> Filtros Avançados</h2>
+        <form method="GET" action="/admin/agendamentos" class="filtros-form">
+            <div class="filtros-grid">
+                <div class="form-group"><label>Data</label><input type="date" name="data" value="{{ filtro_data }}"></div>
+                <div class="form-group"><label>Horário</label><input type="time" name="horario" value="{{ filtro_horario }}" step="600"></div>
+                <div class="form-group"><label>Cliente</label><input type="text" name="cliente" placeholder="Nome ou email" value="{{ filtro_cliente }}"></div>
+            </div>
+            <input type="hidden" name="status" value="{{ filtro_status }}">
+            <div class="filtros-actions">
+                <button class="btn btn-padrao" type="submit"><i class="fas fa-search"></i> Filtrar</button>
+                <a class="btn btn-padrao" href="/admin/agendamentos{% if filtro_status %}?status={{ filtro_status }}{% endif %}"><i class="fas fa-undo"></i> Limpar</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="section">
+        <h2><i class="fas fa-list"></i> Agendamentos</h2>
+        {% if agendamentos %}
+        <div class="agendamentos-grid">
+            {% for agendamento in agendamentos %}
+            <div class="agendamento-card {% if agendamento.status == 'cancelado' %}cancelado{% endif %}">
+                <div class="agendamento-header">
+                    <span class="status-badge status-{{ agendamento.status or 'agendado' }}">{{ (agendamento.status or 'agendado')|upper }}</span>
+                    {% if agendamento.desconto_aplicado %}
+                    <span class="status-badge status-desconto">
+                        <i class="fas fa-gift"></i> DESCONTO 20%
+                    </span>
+                    {% endif %}
+                    {% if agendamento.status == 'agendado' %}
+                    <a class="btn btn-pequeno btn-success" href="/admin/enviar_lembrete/{{ agendamento.id }}" title="Enviar lembrete por email">
+                        <i class="fas fa-envelope"></i> Lembrete
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="agendamento-body">
+                    <p><strong>Cliente:</strong> {{ agendamento.nome_cliente or agendamento.nome_usuario or agendamento.usuario }}</p>
+                    <p><strong>Telefone:</strong> {{ agendamento.telefone_cliente or '' }}</p>
+                    <p><strong>Email:</strong> {{ agendamento.email_cliente or agendamento.usuario }}</p>
+                    <p><strong>Data:</strong> {% set data_parts = agendamento.data.split('-') %}{{ data_parts[2] }}/{{ data_parts[1] }}/{{ data_parts[0] }}</p>
+                    <p><strong>Horário:</strong> {{ agendamento.horario }}</p>
+                    <p><strong>Roteiro:</strong> {{ ROTEIROS.get(agendamento.roteiro, {}).get('nome', 'Não definido') }}</p>
+                    <p><strong>Duração:</strong> {{ agendamento.duracao or 0 }} minutos</p>
+                    <p><strong>Máquinas:</strong> {% set maquinas_list = agendamento.maquinas if agendamento.maquinas is iterable and agendamento.maquinas is not string else [agendamento.maquinas] %}{{ maquinas_list|length }}</p>
+                    <div class="maquinas-lista">
+                        {% if agendamento.maquinas is iterable and agendamento.maquinas is not string %}
+                            {% for maquina in agendamento.maquinas %}<span class="maquina-item-lista">• Máquina {{ maquina }}</span>{% endfor %}
+                        {% else %}<span class="maquina-item-lista">• Máquina {{ agendamento.maquinas }}</span>{% endif %}
+                    </div>
+                    {% if agendamento.data_inicio %}<p><strong>Iniciado em:</strong> {{ agendamento.data_inicio[:16]|replace('T', ' ') }}</p>{% endif %}
+                    {% if agendamento.data_finalizacao %}<p><strong>Finalizado em:</strong> {{ agendamento.data_finalizacao[:16]|replace('T', ' ') }}</p>{% endif %}
+                </div>
+                <div class="agendamento-actions">
+                    {% if agendamento.status == 'agendado' %}
+                        <a class="btn btn-pequeno btn-success" href="/admin/agendamentos/iniciar/{{ agendamento.id }}"><i class="fas fa-play"></i> Iniciar</a>
+                        <a class="btn btn-pequeno" href="/admin/editar/{{ agendamento.id }}"><i class="fas fa-edit"></i> Editar</a>
+                        <button class="btn btn-pequeno btn-danger" onclick="confirmarExclusao('/admin/cancelar/{{ agendamento.id }}', 'Cancelar este agendamento?', 'Cancelar Agendamento')">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    {% elif agendamento.status == 'em_andamento' %}
+                        <a class="btn btn-pequeno btn-danger" href="/admin/agendamentos/finalizar/{{ agendamento.id }}"><i class="fas fa-flag-checkered"></i> Finalizar</a>
+                    {% elif agendamento.status == 'finalizado' %}
+                    {% elif agendamento.status == 'cancelado' %}
+                        <a class="btn btn-pequeno" href="/admin/editar/{{ agendamento.id }}"><i class="fas fa-edit"></i> Editar</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- PAGINAÇÃO -->
+        {% if total_paginas > 1 %}
+        <div class="pagination">
+            {% if pagina_atual > 1 %}
+            <a href="?pagina={{ pagina_atual - 1 }}{% if filtro_data %}&data={{ filtro_data }}{% endif %}{% if filtro_horario %}&horario={{ filtro_horario }}{% endif %}{% if filtro_cliente %}&cliente={{ filtro_cliente }}{% endif %}{% if filtro_status %}&status={{ filtro_status }}{% endif %}" class="page-link">
+                <i class="fas fa-chevron-left"></i> Anterior
+            </a>
+            {% else %}
+            <span class="page-link disabled"><i class="fas fa-chevron-left"></i> Anterior</span>
+            {% endif %}
+
+            {% for p in paginas %}
+                {% if p == pagina_atual %}
+                <span class="page-link active">{{ p }}</span>
+                {% else %}
+                <a href="?pagina={{ p }}{% if filtro_data %}&data={{ filtro_data }}{% endif %}{% if filtro_horario %}&horario={{ filtro_horario }}{% endif %}{% if filtro_cliente %}&cliente={{ filtro_cliente }}{% endif %}{% if filtro_status %}&status={{ filtro_status }}{% endif %}" class="page-link">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if pagina_atual < total_paginas %}
+            <a href="?pagina={{ pagina_atual + 1 }}{% if filtro_data %}&data={{ filtro_data }}{% endif %}{% if filtro_horario %}&horario={{ filtro_horario }}{% endif %}{% if filtro_cliente %}&cliente={{ filtro_cliente }}{% endif %}{% if filtro_status %}&status={{ filtro_status }}{% endif %}" class="page-link">
+                Próximo <i class="fas fa-chevron-right"></i>
+            </a>
+            {% else %}
+            <span class="page-link disabled">Próximo <i class="fas fa-chevron-right"></i></span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state"><i class="fas fa-calendar-times"></i><p>Nenhum agendamento encontrado</p></div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function confirmarExclusao(url, mensagem, titulo) {
+        if (typeof confirmarAcao === 'function') {
+            confirmarAcao(mensagem, titulo).then(function(resultado) {
+                if (resultado) {
+                    window.location.href = url;
+                }
+            });
+        } else {
+            if (confirm(mensagem)) {
+                window.location.href = url;
+            }
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Verificar Código{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="logo-form">
+        <span class="tour">Tour</span><span class="quadri">Quadri</span>
+    </h2>
+    <h3 class="subtitle">
+        <i class="fas fa-shield-alt"></i> Verificar Código
+    </h3>
+
+    <p class="text-center text-muted">
+        Digite o código de 6 dígitos enviado para<br>
+        <strong>{{ email }}</strong>
+    </p>
+
+    <form action="/verificar_codigo" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="email" value="{{ email }}">
+        <div class="form-group-campo">
+            <input type="text" name="codigo" placeholder="Código de 6 dígitos" maxlength="6" required pattern="[0-9]{6}"
+                   class="{% if erros and erros.codigo %}campo-erro{% endif %}">
+            {% if erros and erros.codigo %}
+            <span class="mensagem-erro"><i class="fas fa-exclamation-circle"></i> {{ erros.codigo }}</span>
+            {% endif %}
+        </div>
+        <button class="btn" type="submit">
+            <i class="fas fa-check"></i> Verificar Código
+        </button>
+    </form>
+
+    <br>
+
+    <a href="/esqueci_senha">
+        <i class="fas fa-redo"></i> Solicitar novo código
+    </a>
+    <br><br>
+    <a href="/login">
+        <i class="fas fa-arrow-left"></i> Voltar para o Login
+    </a>
+</div>
+{% endblock %}

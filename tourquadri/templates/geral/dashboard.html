@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header-flex">
+        <h1><span class="tour">Tour</span><span class="quadri">Quadri</span></h1>
+        <a class="btn btn-padrao btn-voltar" href="/conta">
+            <i class="fas fa-user-cog"></i> Minha Conta
+        </a>
+    </div>
+
+    {% if progresso %}
+    <!-- CARD DE FIDELIDADE -->
+    <div class="fidelidade-card {% if progresso.desconto_disponivel %}fidelidade-ativa{% endif %}">
+        <div class="fidelidade-icon">
+            <i class="fas fa-gift"></i>
+        </div>
+        <div class="fidelidade-content">
+            {% if progresso.desconto_disponivel %}
+                <h3>🎉 Você tem {{ progresso.percentual_desconto }}% de desconto!</h3>
+                <p>Aplique no seu próximo agendamento. Aproveite!</p>
+            {% else %}
+                <h3>Programa de Fidelidade</h3>
+                <p>Faltam <strong>{{ progresso.faltam }} passeio{{ 's' if progresso.faltam != 1 else '' }}</strong> para você ganhar <strong>{{ progresso.percentual_desconto }}% de desconto</strong>!</p>
+                <div class="fidelidade-progresso">
+                    <div class="fidelidade-barra">
+                        <div class="fidelidade-barra-preenchimento" style="width: {{ progresso.percentual }}%;"></div>
+                    </div>
+                    <span class="fidelidade-contador">{{ progresso.passeios_realizados }}/{{ progresso.passeios_necessarios }}</span>
+                </div>
+            {% endif %}
+        </div>
+        <a href="/minha_fidelidade" class="fidelidade-link">
+            Ver detalhes <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="section">
+        <h2><i class="fas fa-info-circle"></i> Bem-vindo, {{ nome or usuario }}!</h2>
+        <p>Explore trilhas incríveis com nossos quadriciclos. Agende seu passeio abaixo.</p>
+        <div class="estatisticas">
+            <a href="/maquinas" class="stat-item-link">
+                <div class="stat-item">
+                    <span class="stat-numero">{{ TOTAL_MAQUINAS }}</span>
+                    <span class="stat-label">Nossas Máquinas <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            <a href="/roteiros" class="stat-item-link">
+                <div class="stat-item">
+                    <span class="stat-numero">{{ ROTEIROS|length }}</span>
+                    <span class="stat-label">Nossos Roteiros <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            <a href="/minhas_estatisticas" class="stat-item-link">
+                <div class="stat-item">
+                    <span class="stat-numero"><i class="fas fa-chart-line"></i></span>
+                    <span class="stat-label">Minhas Estatísticas <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2><i class="fas fa-calendar-plus"></i> Agendar Passeio</h2>
+        <form action="/agendar_passeio" method="POST" id="form-agendamento">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% include 'forms/agendamento_usuario.html' %}
+
+            {% if progresso and progresso.desconto_disponivel %}
+            <div class="desconto-box">
+                <label class="desconto-checkbox">
+                    <input type="checkbox" name="aplicar_desconto" id="aplicar_desconto" {% if aplicar_desconto_auto %}checked{% endif %}>
+                    <span class="desconto-checkmark"></span>
+                    <span class="desconto-texto">
+                        <strong>🎁 Aplicar meus {{ progresso.percentual_desconto }}% de desconto</strong>
+                        <small>Você tem um desconto disponível!</small>
+                    </span>
+                </label>
+            </div>
+            {% endif %}
+
+            <button class="btn btn-padrao" type="submit" id="btn-agendar">
+                <i class="fas fa-check"></i> Agendar Passeio
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        inicializarAgendamento();
+    });
+</script>
+{% endblock %}

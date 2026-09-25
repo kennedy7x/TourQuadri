@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Criar Conta{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="logo-form">
+        <span class="tour">Tour</span><span class="quadri">Quadri</span>
+    </h2>
+    <h3 class="subtitle">Crie sua conta e comece sua aventura</h3>
+
+    <form action="/salvar_usuario" method="POST" id="form-register">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group-campo">
+            <label>Nome Completo</label>
+            <input type="text" name="nome" id="nome" placeholder="Digite seu nome completo" value="{{ nome or '' }}" 
+                   class="{% if erros and erros.nome %}campo-erro{% endif %}" required>
+            <span id="nome-erro" class="mensagem-erro" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> Digite seu nome completo (mínimo 3 caracteres)
+            </span>
+            {% if erros and erros.nome %}
+            <span class="mensagem-erro"><i class="fas fa-exclamation-circle"></i> {{ erros.nome }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group-campo">
+            <label>Telefone</label>
+            <input type="text" name="telefone" id="telefone" placeholder="(11) 99999-9999" value="{{ telefone or '' }}"
+                   class="{% if erros and erros.telefone %}campo-erro{% endif %}" required maxlength="15">
+            <span id="telefone-erro" class="mensagem-erro" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> Telefone inválido
+            </span>
+            {% if erros and erros.telefone %}
+            <span class="mensagem-erro"><i class="fas fa-exclamation-circle"></i> {{ erros.telefone }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group-campo">
+            <label>E-mail</label>
+            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" value="{{ email or '' }}"
+                   class="{% if erros and erros.email %}campo-erro{% endif %}" required>
+            <span id="email-erro" class="mensagem-erro" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> Digite um e-mail válido (ex: email@dominio.com)
+            </span>
+            {% if erros and erros.email %}
+            <span class="mensagem-erro"><i class="fas fa-exclamation-circle"></i> {{ erros.email }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group-campo">
+            <label>Senha</label>
+            <div class="password-wrapper">
+                <input type="password" name="senha" id="senhaRegister" placeholder="Digite sua senha"
+                       class="{% if erros and erros.senha %}campo-erro{% endif %}" required>
+                <button type="button" class="password-toggle" onclick="toggleSenhaRegister()" aria-label="Mostrar/ocultar senha">
+                    <i class="fas fa-eye-slash" id="iconeSenhaRegister"></i>
+                </button>
+            </div>
+            
+            <div id="senha-requisitos" style="margin-top: 8px; font-size: 13px; color: #6b7280; display: none;">
+                <p style="margin: 0 0 5px 0; font-weight: 600;">A senha deve ter:</p>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li id="req-comprimento" style="padding: 3px 0;">❌ Mínimo 8 caracteres</li>
+                    <li id="req-maiuscula" style="padding: 3px 0;">❌ Pelo menos 1 letra maiúscula (A-Z)</li>
+                    <li id="req-minuscula" style="padding: 3px 0;">❌ Pelo menos 1 letra minúscula (a-z)</li>
+                    <li id="req-numero" style="padding: 3px 0;">❌ Pelo menos 1 número (0-9)</li>
+                    <li id="req-especial" style="padding: 3px 0;">❌ Pelo menos 1 caractere especial (!@#$%^&*...)</li>
+                </ul>
+            </div>
+            
+            {% if erros and erros.senha %}
+            <span class="mensagem-erro"><i class="fas fa-exclamation-circle"></i> {{ erros.senha }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group-campo">
+            <label>Confirmar Senha</label>
+            <div class="password-wrapper">
+                <input type="password" name="confirmar_senha" id="confirmarSenhaRegister" placeholder="Confirme sua senha"
+                       class="{% if erros and erros.confirmar_senha %}campo-erro{% endif %}" required>
+                <button type="button" class="password-toggle" onclick="toggleConfirmarSenha()" aria-label="Mostrar/ocultar senha">
+                    <i class="fas fa-eye-slash" id="iconeConfirmarSenha"></i>
+                </button>
+            </div>
+            <span id="confirmar-erro" class="mensagem-erro" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> As senhas não coincidem
+            </span>
+            {% if erros and erros.confirmar_senha %}
+            <span class="mensagem-erro"><i class="fas fa-exclamation-circle"></i> {{ erros.confirmar_senha }}</span>
+            {% endif %}
+        </div>
+
+        <button class="btn" type="submit" id="btn-cadastrar">Criar Conta</button>
+    </form>
+
+    <br>
+
+    <a href="/login"><i class="fas fa-arrow-left"></i> Já tenho conta</a>
+</div>
+{% endblock %}

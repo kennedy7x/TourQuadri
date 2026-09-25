@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}TourQuadri - Alterar Senha{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1><i class="fas fa-key"></i> Alterar Senha</h1>
+
+    <form method="POST" class="senha-form" id="form-alterar-senha">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group-campo">
+            <label for="senha_atual"><i class="fas fa-lock"></i> Senha Atual</label>
+            <div class="password-wrapper">
+                <input type="password" name="senha_atual" id="senha_atual" placeholder="Digite sua senha atual" required>
+                <button type="button" class="password-toggle" onclick="toggleSenhaAtual()" aria-label="Mostrar/ocultar senha">
+                    <i class="fas fa-eye-slash" id="iconeSenhaAtual"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group-campo">
+            <label for="nova_senha"><i class="fas fa-lock"></i> Nova Senha</label>
+            <div class="password-wrapper">
+                <input type="password" name="nova_senha" id="nova_senha" placeholder="Digite a nova senha" required>
+                <button type="button" class="password-toggle" onclick="toggleNovaSenha()" aria-label="Mostrar/ocultar senha">
+                    <i class="fas fa-eye-slash" id="iconeNovaSenha"></i>
+                </button>
+            </div>
+            
+            <div id="senha-requisitos-alterar" style="margin-top: 8px; font-size: 13px; color: #6b7280; display: none;">
+                <p style="margin: 0 0 5px 0; font-weight: 600;">A senha deve ter:</p>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li id="req-alt-comprimento" style="padding: 3px 0;">❌ Mínimo 8 caracteres</li>
+                    <li id="req-alt-maiuscula" style="padding: 3px 0;">❌ Pelo menos 1 letra maiúscula (A-Z)</li>
+                    <li id="req-alt-minuscula" style="padding: 3px 0;">❌ Pelo menos 1 letra minúscula (a-z)</li>
+                    <li id="req-alt-numero" style="padding: 3px 0;">❌ Pelo menos 1 número (0-9)</li>
+                    <li id="req-alt-especial" style="padding: 3px 0;">❌ Pelo menos 1 caractere especial (!@#$%^&*...)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group-campo">
+            <label for="confirmar_senha"><i class="fas fa-lock"></i> Confirmar Nova Senha</label>
+            <div class="password-wrapper">
+                <input type="password" name="confirmar_senha" id="confirmar_senha" placeholder="Confirme a nova senha" required>
+                <button type="button" class="password-toggle" onclick="toggleConfirmarNovaSenha()" aria-label="Mostrar/ocultar senha">
+                    <i class="fas fa-eye-slash" id="iconeConfirmarNovaSenha"></i>
+                </button>
+            </div>
+            <span id="confirmar-senha-erro" class="mensagem-erro" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i> As senhas não coincidem
+            </span>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-padrao" type="submit" id="btn-salvar">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+            <a class="btn btn-padrao" href="/conta">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
